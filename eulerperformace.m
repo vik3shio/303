@@ -24,7 +24,11 @@ x(3,1) = -13.0964 + 24.4684 - 11.3720; %v
 x(4,1) = -0.2496 - 0.6962 + 0.9457; %w
 F = zeros(4,1);
 
-u_var = [20,50,75,100,120,200,300];
+u_var = [20,50,75,100];
+colors = ['r','b','g','c','k','m',"#EDB120"];
+
+figure
+hold on;
 
 for i = 1:length(u_var)
     u = u_var(i)/3.6; %m/s
@@ -44,17 +48,25 @@ for i = 1:length(u_var)
         
         
     end
-
-    figure;
-    hold on;
-    plot(t, x(3,:),'b', 'LineWidth', 2);
-    hold on;
-    plot(t, x(2,:),'r','LineWidth', 2); 
-    grid on;
+    
+    subplot(2,1,1); 
+    plot(t, x(3,:),'color', colors(i), 'LineWidth', 2);
     xlabel('Time (s)');
-    ylabel('Lateral Accel. and Yaw Rate');
-    title(['Variable Velocity u = ', num2str(u*3.6) ,'(km/h)']);
-    legend('y_a(t)','\psi_v(t)');
+    ylabel('Lateral Accel. (m/s^2)');
+    title(['Variable Tangential Velocity']);
+    legend('u = 20 km/h', 'u = 50 km/h', 'u = 75 km/h', ...
+        'u = 100 km/h','u = 200','u = 300');
+    hold on;
+    grid on;
+    
+    subplot(2,1,2);   
+    plot(t, x(2,:),'color', colors(i),'LineWidth', 2); 
+    xlabel('Time (s)');
+    ylabel('Yaw Rate (rad/s)');
+    hold on;
+    grid on;
+
+    %legend('y_a(t)','\psi_v(t)');
     x = zeros;
     x(1,1) = 0; %y     
     x(2,1) = 0; %psi  
