@@ -28,33 +28,33 @@ x = zeros(4,length(t));
 % IC at t = 0 (given eq7)
 x(1,1) = 0; %y     
 x(2,1) = 0; %psi  
-x(3,1) = -13.0964 + 24.4684 - 11.3720; %v 
-x(4,1) = -0.2496 - 0.6962 + 0.9457; %w
+x(3,1) = 0; %v 
+x(4,1) = 0; %w
 
 F = zeros(4,1);
 
+F_temp = zeros(2,1);
+xy_plot = zeros(2,length(t));
+
 for n = 1:length(t)-1
     
+    F_temp = [u*cos(x(2,n)) - x(3,n)+a*x(4,n)*sin(x(2,n));
+                x(3,n)+a*x(4,n)*cos(x(2,n)) + u*sin(x(2,n))];
+
     F= [x(3,n);
         x(4,n);
         A(1,1)*x(3,n) + A(1,2)*x(4,n) + B(1);
         A(2,1)*x(3,n) + A(2,2)*x(4,n) + B(2)];
 
-    x(:,n+1) = x(:,n) + dt * F(:,1);
+    x(:,n+1) = x(:,n) + dt * F(:);
+    
+    xy_plot(:,n+1) = xy_plot(:,n) + dt*F_temp(:);
 
 end
 
-y_exact = -13.0964 * exp(-1.9745 * t) + 24.4684 * exp(-0.9839 * t) - 11.3720;
-psi_exact = -0.2496 * exp(-1.9745 * t) - 0.6962 * exp(-0.9839 * t) + 0.9457;
-
 figure;
 hold on;
-plot(t, x(3,:), 'b', 'LineWidth', 2); 
-plot(t, x(4,:), 'r', 'LineWidth', 2); 
-% plot(t,y_exact,'black', 'LineWidth', 1)
-% plot(t,psi_exact,'black', 'LineWidth', 1)
+plot(xy_plot(1,:), xy_plot(2,:), 'b', 'LineWidth', 2); 
 grid on;
-xlabel('Time (s)');
-ylabel('Lateral Velocity and Yaw Rate');
-legend('$\dot{y}(t)$','$\dot{\psi}(t)$', ...
-    'eq(7) soln', 'Interpreter','LaTex');
+xlabel('x');
+ylabel('y');
